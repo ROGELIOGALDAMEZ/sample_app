@@ -2,8 +2,9 @@
 
 <html>
 	<head>
-		<title>Ruby on Rails Tut Sample App | <%= @title %></title>
+		<title><%= title %></title>
 		<%= csrf_meta_tag %>
+		<%= stylesheet_link_tag 'Gumby-master/css/gumby.css', :media => 'screen' %>
 	</head>
 	<body>
 		<%= yield %>
