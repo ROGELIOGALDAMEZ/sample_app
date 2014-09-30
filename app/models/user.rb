@@ -9,7 +9,8 @@
   
 
 class User < ActiveRecord::Base
-  attr_accessible :name, :email
+  #This line below did not work
+ # attr_accessible :name, :email
   
   #checking to ensure a name has been specified
   validates :name, :presence => true,
@@ -19,8 +20,8 @@ class User < ActiveRecord::Base
   #checking to ensure an email has been specified
   validates :email, :presence => true
   #checking to ensure correct email format has been entered
-  validates :email, email_format: { message: "doesn't look like an email address" }
+  validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, on: :create }
   #checking to ensure the email is unique eg; doesnt already exist
-  validates :email, :uniqueness => true
+  validates :email, :uniqueness => {:case_sensitive => false}
   
 end
