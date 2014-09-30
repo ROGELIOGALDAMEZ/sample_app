@@ -34,6 +34,10 @@ end
 
 gem 'annotated_models'
 
+gem 'protected_attributes'
+
+gem 'validates_email_format_of'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
