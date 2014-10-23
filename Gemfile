@@ -38,6 +38,8 @@ gem 'protected_attributes'
 
 gem 'validates_email_format_of'
 
+gem 'gravatar_image_tag'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

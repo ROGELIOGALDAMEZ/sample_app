@@ -6,11 +6,15 @@
 # email       :string (255)
 # created_a   :datetime
 # updated_at  :datetime
+# encrypted_password :string(255)
   
 
 class User < ActiveRecord::Base
-  #This line below did not work
- # attr_accessible :name, :email
+  
+  attr_accessor   :password
+  attr_accessible :name, :email, :password, :password_confirmation
+ 
+  
   
   #checking to ensure a name has been specified
   validates :name, :presence => true,
@@ -24,4 +28,41 @@ class User < ActiveRecord::Base
   #checking to ensure the email is unique eg; doesnt already exist
   validates :email, :uniqueness => {:case_sensitive => false}
   
+  validates :password, :presence => true,
+                       :confirmation => true,
+                       :length => {:within => 6..40}
+  
+  before_save :encrypt_password
+  
+  def has_password?(submitted_password)
+    encrypted_password == encrypt(submitted_password) #comparing encrypted password by encrypting the submitted vs stored
+  end
+  
+  class <<self
+    
+    def authenticate(email, submitted_password)
+      user = find_by_email(email)
+      return nil  if user.nil?
+      return user if user.has_password?(submitted_password)
+    end
+  end
+  
+  private
+    def encrypt_password
+        self.salt = make_salt if new_record?
+        self.encrypted_password = encrypt(self.password)
+    end
+    
+    def encrypt(string)
+      secure_hash("#{salt}--#{string}")
+    end
+    
+    def make_salt
+      secure_hash("#{Time.now.utc}--#{password}")
+    end
+    
+    def secure_hash(string)
+      Digest::SHA2.hexdigest(string)
+    end
+    
 end
