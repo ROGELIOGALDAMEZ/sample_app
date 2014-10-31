@@ -41,12 +41,12 @@ class User < ActiveRecord::Base
   class <<self
     
     def authenticate(email, submitted_password)
-      user = find_by_email(email)
+      user = User.where(email: email).first #changed this line from tutorial
       (user && user.has_password?(submitted_password)) ? user : nil
     end
     
     def authenticate_with_salt(id, cookie_salt)
-      user = find_by_id(id)
+      user = User.where(id: id).first #changed this line from tutorial
       (user && user.salt == cookie_salt) ? user : nil
     end
     
