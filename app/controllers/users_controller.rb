@@ -3,6 +3,11 @@ class UsersController < ApplicationController
   before_filter :authenticate, :only => [:edit, :update] #used as part of redirecting users to sign_in before they can edit settings
   before_filter :correct_user, :only => [:edit, :update]
   
+  def index
+    @users = User.all
+    @title = "All Users"
+  end
+  
   def show
     @user = User.find(params[:id])
     @title = @user.name
