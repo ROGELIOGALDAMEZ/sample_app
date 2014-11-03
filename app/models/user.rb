@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   attr_accessor   :password
   attr_accessible :name, :email, :password, :password_confirmation
  
-  
+  has_many :microposts, :dependent => :destroy  #assosciation to the Micropost table
   
   #checking to ensure a name has been specified
   validates :name, :presence => true,
