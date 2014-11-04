@@ -14,8 +14,12 @@ class User < ActiveRecord::Base
   attr_accessor   :password
   attr_accessible :name, :email, :password, :password_confirmation
  
-  has_many :microposts, :dependent => :destroy  #assosciation to the Micropost table
-  
+  has_many :microposts,           :dependent   => :destroy  #assosciation to the Micropost table
+  has_many :relationships,        :dependent   => :destroy,   :foreign_key => "follower_id"
+  has_many :reverse_relationship, :dependent => :destroy,     :foreign_key => "followed_id", :class_name => "Relationship"
+  has_many :following,            :through => :relationships, :source => :followed
+  has_many :followers,            :through => :reverse_relationship, :source => :follower
+                           
   #checking to ensure a name has been specified
   validates :name, :presence => true,
   #ensure name is no more than 50 chars
@@ -40,6 +44,18 @@ class User < ActiveRecord::Base
   
   def feed
     Micropost.where("user_id = ?", id)
+  end
+  
+  def following?(followed)
+    self.relationships.find_by_followed_id(followed)
+  end
+  
+  def follow!(followed)
+    relationships.create!(:followed_id => followed.id)
+  end
+  
+  def unfollow!(followed)
+    relationships.find_by_followed_id(followed).destroy
   end
   
   class <<self
