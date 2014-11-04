@@ -38,6 +38,10 @@ class User < ActiveRecord::Base
     encrypted_password == encrypt(submitted_password) #comparing encrypted password by encrypting the submitted vs stored
   end
   
+  def feed
+    Micropost.where("user_id = ?", id)
+  end
+  
   class <<self
     
     def authenticate(email, submitted_password)
